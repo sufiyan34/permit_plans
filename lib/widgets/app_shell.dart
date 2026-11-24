@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:permit_plans/constants/app_colors.dart';
 import 'package:permit_plans/constants/app_routes.dart';
 import 'package:permit_plans/widgets/app_sidebar.dart';
+import 'package:permit_plans/widgets/floating_chat_widget.dart';
 
 /// One tab in the bottom navigation bar (or side rail on wide screens).
 ///
@@ -97,6 +98,19 @@ class AppShell extends StatelessWidget {
         final isWide = constraints.maxWidth >= wideBreakpoint && canNavigate;
         final extended = constraints.maxWidth >= 1200;
 
+        // Keep the assistant inside the page content instead of the Scaffold
+        // FAB slot. The full-size overlay lets the chat panel expand without
+        // being clipped by the small constraints normally given to a FAB.
+        Widget withAssistantOverlay(Widget page) {
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              page,
+              const Positioned.fill(child: FloatingChatWidget()),
+            ],
+          );
+        }
+
         return Scaffold(
           appBar: _ShellAppBar(
             title: title,
@@ -114,10 +128,10 @@ class AppShell extends StatelessWidget {
                       onSelected: _select,
                       extended: extended,
                     ),
-                    Expanded(child: body),
+                    Expanded(child: withAssistantOverlay(body)),
                   ],
                 )
-              : body,
+              : withAssistantOverlay(body),
           bottomNavigationBar: (!isWide && canNavigate)
               ? _FloatingNavBar(
                   destinations: destinations,

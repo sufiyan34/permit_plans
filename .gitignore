@@ -51,3 +51,14 @@ app.*.map.json
 supabase/functions/.env
 supabase/functions/.env.*
 !supabase/functions/.env.example
+# Node.js dependencies
+node_modules/
+**/node_modules/
+
+# Supabase local temporary files
+supabase/.temp/
+
+# Environment secrets
+.env
+.env.*
+!.env.example
